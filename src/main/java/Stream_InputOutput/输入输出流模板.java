@@ -2,7 +2,6 @@ package Stream_InputOutput;
 
 import java.util.*;
 import java.io.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class 输入输出流模板 {
     static StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
