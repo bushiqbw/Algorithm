@@ -2,6 +2,8 @@ package Stream_InputOutput;
 
 import java.util.*;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class 输入输出流模板 {
     static StreamTokenizer st = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in)));
     static PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out));
@@ -19,10 +21,10 @@ public class 输入输出流模板 {
     }
 
     public static void main(String[] args) throws IOException {
-        //输出
         pw.println();
         pw.flush();
     }
+
 
 
 }
