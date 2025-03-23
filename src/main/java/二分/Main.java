@@ -1,78 +1,57 @@
 package 二分;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    private static List<Long> twoDigitUnlucky = new ArrayList<>();
+
+    static {
+        for (int a = 1; a <= 9; a++) {
+            if (a % 3 == 0) continue;
+            for (int b = 0; b <= 9; b++) {
+                if (b % 3 == 0) continue;
+                int sum = a + b;
+                if (sum % 3 != 0) {
+                    twoDigitUnlucky.add((long) (a * 10 + b));
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        long l1 = scanner.nextLong();
-        long r1 = scanner.nextLong();
-        long l2 = scanner.nextLong();
-        long r2 = scanner.nextLong();
-        scanner.close();
+        int T = scanner.nextInt();
+        while (T-- > 0) {
+            long L = scanner.nextLong();
+            long R = scanner.nextLong();
 
-        System.out.println(calculate(l1, r1, l2, r2));
-    }
-
-    private static long calculate(long l1, long r1, long l2, long r2) {
-        if (l1 > r1 || l2 > r2) {
-            return 0;
-        }
-
-        long L = Math.max(l2, 1L);
-        long R = Math.min(r2, r1);
-
-        if (L > R) {
-            return 0;
-        }
-
-        long sum1 = getSum(r1, L, R);
-        long sum2 = getSum(l1 - 1, L, R);
-
-        return sum1 - sum2;
-    }
-
-    private static long getSum(long n, long a, long b) {
-        if (a > b) {
-            return 0;
-        }
-
-        long sum = 0;
-
-        long sqrtN = (long) Math.sqrt(n);
-        long start = a;
-        long end = Math.min(b, sqrtN);
-
-        for (long j = start; j <= end; j++) {
-            sum += n / j;
-        }
-
-        long maxK = (a == 0) ? 0 : n / a;
-        for (long k = 1; k <= maxK; k++) {
-            long jMin = n / (k + 1) + 1;
-            long jMax = n / k;
-
-            jMin = Math.max(jMin, a);
-            jMax = Math.min(jMax, b);
-
-            if (jMin > jMax) {
-                continue;
+            // 计算一位数的非3的倍数的数目
+            long start1 = Math.max(L, 1);
+            long end1 = Math.min(R, 9);
+            long count1NonMultiples = 0;
+            if (start1 <= end1) {
+                long count1Digit = end1 - start1 + 1;
+                long cntMultiples = (end1 / 3) - ((start1 - 1) / 3);
+                count1NonMultiples = count1Digit - cntMultiples;
             }
 
-            if (jMax <= sqrtN) {
-                continue;
+            // 计算两位数的非幸运数目
+            long start2 = Math.max(L, 10);
+            long end2 = Math.min(R, 99);
+            long count2Unlucky = 0;
+            if (start2 <= end2) {
+                for (long num : twoDigitUnlucky) {
+                    if (num >= start2 && num <= end2) {
+                        count2Unlucky++;
+                    }
+                }
             }
 
-            jMin = Math.max(jMin, sqrtN + 1);
-
-            if (jMin > jMax) {
-                continue;
-            }
-
-            sum += (jMax - jMin + 1) * k;
+            // 总非幸运数目
+            long totalUnlucky = count1NonMultiples + count2Unlucky;
+            long total = R - L + 1;
+            long result = total - totalUnlucky;
+            System.out.println(result);
         }
-
-        return sum;
     }
 }
