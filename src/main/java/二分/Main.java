@@ -2,57 +2,58 @@ package 二分;
 
 import java.util.Scanner;
 
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int n = scanner.nextInt();
-        int m = scanner.nextInt();
-        int k = scanner.nextInt();
-        System.out.println(maxApples(n, m, k));
-    }
-
-    private static int maxApples(int n, int m, int k) {
-        int low = 1;
-        int high = m;
-        int ans = 0;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            long total = computeTotal(n, k, mid);
-            if (total <= m) {
-                ans = mid;
-                low = mid + 1;
-            } else {
-                high = mid - 1;
+        int[][] matrix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = scanner.nextInt();
             }
         }
-        return ans;
-    }
 
-    private static long computeTotal(int n, int k, long x) {
-        return leftSum(k, x) + rightSum(n, k, x) + x;
-    }
+        boolean[][] visited = new boolean[n][n];
+        int total = 0;
 
-    private static long leftSum(int k, long x) {
-        int num = k - 1;
-        if (num == 0) return 0;
-        if (x >= num + 1) {
-            return (long) num * (x - 1 + x - num) / 2;
-        } else {
-            long sum = x * (x - 1) / 2;
-            sum += (num - (x - 1)) * 1L;
-            return sum;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (!visited[i][j]) {
+                    List<int[]> group = new ArrayList<>();
+                    int x = i;
+                    int y = j;
+                    do {
+                        group.add(new int[]{x, y});
+                        int[] next = rotate90(x, y, n);
+                        x = next[0];
+                        y = next[1];
+                    } while (x != i || y != j);
+
+                    for (int[] pos : group) {
+                        visited[pos[0]][pos[1]] = true;
+                    }
+
+                    List<Integer> values = new ArrayList<>();
+                    for (int[] pos : group) {
+                        values.add(matrix[pos[0]][pos[1]]);
+                    }
+
+                    int max = Collections.max(values);
+                    int sum = 0;
+                    for (int val : values) {
+                        sum += (max - val);
+                    }
+                    total += sum;
+                }
+            }
         }
+
+        System.out.println(total);
     }
 
-    private static long rightSum(int n, int k, long x) {
-        int num = n - k;
-        if (num == 0) return 0;
-        if (x >= num + 1) {
-            return (long) num * (x - 1 + x - num) / 2;
-        } else {
-            long sum = x * (x - 1) / 2;
-            sum += (num - (x - 1)) * 1L;
-            return sum;
-        }
+    private static int[] rotate90(int x, int y, int n) {
+        return new int[]{y, n - 1 - x};
     }
 }
