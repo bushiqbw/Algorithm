@@ -58,4 +58,43 @@ public class Main {
     private static int[] rotate(int x, int y, int n) {
         return new int[]{y, n - 1 - x};
     }
+
+    import java.util.HashMap;
+
+    public class Solution {
+        public int solution(int[] A, int[] B, int N) {
+            int[] degree = new int[N + 1];
+            HashMap<Integer, HashMap<Integer, Integer>> edgeCount = new HashMap<>();
+
+            for (int i = 0; i < A.length; i++) {
+                int u = A[i];
+                int v = B[i];
+                degree[u]++;
+                degree[v]++;
+
+                int a = Math.min(u, v);
+                int b = Math.max(u, v);
+                if (!edgeCount.containsKey(a)) {
+                    edgeCount.put(a, new HashMap<>());
+                }
+                HashMap<Integer, Integer> innerMap = edgeCount.get(a);
+                innerMap.put(b, innerMap.getOrDefault(b, 0) + 1);
+            }
+
+            int maxRank = 0;
+            for (int i = 0; i < A.length; i++) {
+                int u = A[i];
+                int v = B[i];
+                int a = Math.min(u, v);
+                int b = Math.max(u, v);
+                int count = edgeCount.get(a).get(b);
+                int currentRank = degree[u] + degree[v] - count;
+                if (currentRank > maxRank) {
+                    maxRank = currentRank;
+                }
+            }
+
+            return maxRank;
+        }
+    }
 }
