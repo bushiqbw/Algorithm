@@ -6,7 +6,7 @@ import java.util.*;
 
 
 
-public class Solution {
+public class Main {
 
     private static class Results {
         public String set_name;
